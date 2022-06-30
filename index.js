@@ -28,6 +28,13 @@ async function run () {
             res.send(result)
         })
 
+        app.get('/api/gettingTodo', async(req, res) => {
+            const email = req.query.email;
+            const query = {email: email}
+            const result = await totalTodo.find(query).toArray()
+            res.send(result)
+        })
+
     } 
     
     finally {
