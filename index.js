@@ -19,6 +19,15 @@ async function run () {
     try {
         await client.connect()
         console.log("DB Connected");
+
+        const totalTodo = client.db('Todo-App').collection('totaltodo')
+
+        app.post('/api/addingTodo', async(req, res) => {
+            const data = req.body
+            const result = await totalTodo.insertOne(data)
+            res.send(result)
+        })
+
     } 
     
     finally {
