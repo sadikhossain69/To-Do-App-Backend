@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000
 require('dotenv').config()
 
@@ -15,28 +15,46 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 
-async function run () {
+async function run() {
     try {
         await client.connect()
         console.log("DB Connected");
 
         const totalTodo = client.db('Todo-App').collection('totaltodo')
 
-        app.post('/api/addingTodo', async(req, res) => {
+        app.post('/api/addingTodo', async (req, res) => {
             const data = req.body
             const result = await totalTodo.insertOne(data)
             res.send(result)
         })
 
-        app.get('/api/gettingTodo', async(req, res) => {
+        app.get('/api/gettingTodo', async (req, res) => {
             const email = req.query.email;
-            const query = {email: email}
+            const query = { email: email }
             const result = await totalTodo.find(query).toArray()
             res.send(result)
         })
 
-    } 
-    
+        app.put('/api/editTask/:id', async (req, res) => {
+            const id = req.params.id
+            const taskInput = req.body
+            const filter = { _id: ObjectId(id) }
+            const options = { upsert: true };
+            const updateText = {
+                $set: {
+                    taskInput: taskInput.taskInput,
+                },
+            };
+            const result = await totalTodo.updateOne(
+                filter,
+                updateText,
+                options
+            );
+            res.send(result);
+        })
+
+    }
+
     finally {
 
     }
