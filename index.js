@@ -30,6 +30,7 @@ async function run() {
 
         app.get('/api/gettingTodo', async (req, res) => {
             const email = req.query.email;
+            console.log(email);
             const query = { email: email }
             const result = await totalTodo.find(query).toArray()
             res.send(result)
