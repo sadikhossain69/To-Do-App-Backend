@@ -65,6 +65,15 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/api/completedTask', async (req, res) => {
+            const email = req.query.email;
+            // const queryId = req.query.id;
+            // const id = { _id: ObjectId(queryId) }
+            const query = { email: email, complete: true }
+            const result = await totalTodo.find(query).toArray()
+            res.send(result)
+        })
+
     }
 
     finally {
