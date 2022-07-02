@@ -53,6 +53,18 @@ async function run() {
             res.send(result);
         })
 
+        app.put('/api/completeTask/:id', async (req, res) => {
+            const id = req.params.id
+            const filter = { _id: ObjectId(id) }
+            const updateDoc = {
+                $set: {
+                    complete: true
+                }
+            }
+            const result = await totalTodo.updateOne(filter, updateDoc)
+            res.send(result)
+        })
+
     }
 
     finally {
